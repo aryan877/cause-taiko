@@ -2,122 +2,141 @@
 
 A blockchain-based platform for transparent charitable donations with real-time tracking, NFT rewards, and impact scoring on Taiko.
 
+---
+
 ## Overview
 
-The Transparent Donation Platform enables fully transparent charitable giving by leveraging blockchain technology. Donors can track their contributions in real-time, earn NFT badges for their support, and monitor the impact of their donations through a comprehensive scoring system.
+The **Cause Taiko Platform** enables fully transparent charitable giving by leveraging blockchain technology on Taiko. Donors can track their contributions in real-time, earn NFT badges for their support, and monitor the impact of their donations through a comprehensive scoring system.
+
+---
 
 ## Project Repositories
 
-- [Smart Contracts](https://github.com/aryan877/cause-taiko-contracts) - Solidity contracts for donation tracking and NFT rewards
-- [Frontend](https://github.com/aryan877/cause-taiko-next.js) - Next.js web application
-- [Indexing](https://github.com/aryan877/cause-taiko-goldsky-subgraph) - Goldsky subgraph for event indexing
+- **[Smart Contracts](https://github.com/aryan877/cause-taiko-contracts):** Solidity contracts for donation tracking and NFT rewards.
+- **[Frontend](https://github.com/aryan877/cause-taiko-next.js):** Next.js web application.
+- **[Indexing](https://github.com/aryan877/cause-taiko-goldsky-subgraph):** Goldsky subgraph for event indexing.
+
+---
 
 ## Key Features
 
-- **Transparent Fund Tracking**: Real-time monitoring of donation flows and fund utilization
-- **NFT Badge System**: Reward donors with NFT badges based on contribution levels
-  - Bronze: 0.1 ETH
-  - Silver: 0.5 ETH
-  - Gold: 1.0 ETH
-  - Diamond: 5.0 ETH
-- **Impact Scoring**: Quantifiable measurement of donation impact
-- **Milestone Tracking**: Track cause progress through defined milestones
-- **Real-time Analytics**: Visualize donation trends and impact metrics
-- **User Profiles**: Detailed donor profiles with contribution history
+- **Transparent Fund Tracking:** Real-time monitoring of donation flows and fund utilization.
+- **NFT Badge System:** Reward donors based on contribution levels (Bronze, Silver, Gold, Diamond).
+- **Impact Scoring:** Quantifiable measurement of donation impact.
+- **Milestone Tracking:** Track cause progress through milestones.
+- **Real-time Analytics:** Visualize donation trends and impact metrics.
+- **User Profiles:** Detailed donor profiles with contribution history.
 
-## Technical Architecture
+---
+
+## Technical Setup
 
 ### Smart Contracts
 
-- Deployed on Taiko Hekla Testnet
-- Solidity 0.8.20
-- Uses OpenZeppelin contracts for security
-- Implements ERC721 for NFT badges
-- Comprehensive event emission for indexing
+1. **Install dependencies**:
 
-### Frontend
+   - Clone the repository.
+   - Run `npm install` in the project directory.
 
-- Next.js 15
-- Wagmi
-- Shadcn/ui components
-- ECharts
-- Responsive design
+2. **Set up environment variables**:
 
-### Data Indexing & Storage
+   - Create a `.env` file with your private key:
+     ```env
+     PRIVATE_KEY=your_private_key_here
+     ```
 
-- Goldsky for event indexing and transformation
-  - Real-time event processing
-  - Custom entity schemas
-  - Automated indexing pipeline
-- Neon PostgreSQL Database
-  - Mirror of Goldsky subgraph data
-  - High-performance queries
-  - Serverless scaling
-  - Automatic backups
-- Mirror Pipeline Integration
-  - Real-time data synchronization
-  - Custom data transformations
-  - Efficient data retrieval
+3. **Deploy contracts**:
 
-### Smart Contracts (Taiko Hekla Testnet)
+   - Compile contracts: `npx hardhat compile`.
+   - Deploy to Taiko testnet:
+     ```bash
+     npx hardhat run scripts/deploy-taiko.ts --network taiko-hekla
+     ```
 
-- Cause Taiko Smart Contract: [0xEF8594BAA7697BfD0bC5A9a721ADf73c4487b96c](https://explorer.hekla.taiko.xyz/address/0xEF8594BAA7697BfD0bC5A9a721ADf73c4487b96c)
+4. **Run tests**:
+   - Execute `npx hardhat test` for unit tests.
+   - For gas reporting, set `REPORT_GAS=true` and run the tests again.
 
-### Goldsky Subgraph
+---
 
-- Endpoint: [https://api.goldsky.com/api/public/project_clng3ev6y7xrd01uj96bz4n7k/subgraphs/cause-taiko/0.0.1/gn](https://api.goldsky.com/api/public/project_clng3ev6y7xrd01uj96bz4n7k/subgraphs/cause-taiko/0.0.1/gn)
+### Goldsky Integration
 
-### Neon Database
+1. **Set up Goldsky**:
 
-- Region: AWS us-east-1
-- Type: Serverless v2
-- Connection pooling enabled
-- Auto-scaling configuration
+   - Create a Goldsky account.
+   - Install The Graph CLI: `npm install -g @graphprotocol/graph-cli`
+   - Install Goldsky CLI: `curl https://goldsky.com | sh`
+   - Obtain your API key from the Goldsky dashboard
+   - Login to Goldsky: `goldsky login`
 
-## Event Indexing Architecture
+2. **Watch Tutorial**:
 
-### Indexed Events
+   For detailed setup guidance, watch [this wonderful tutorial](https://www.youtube.com/watch?v=DsqMxaWAml8) by [@javiertrujillog](https://github.com/javiertrujillog) from Goldsky.
 
-- CauseCreated
-- DonationReceived
-- MilestoneAdded
-- MilestoneCompleted
-- BadgeEarned
-- FundsWithdrawn
-- CauseTargetReached
-- ImpactScoreUpdated
+---
 
-### Data Flow
+### Frontend (Next.js)
 
-1. Events emitted from smart contract
-2. Goldsky indexes events in real-time
-3. Mirror Pipeline transforms data
-4. Neon DB stores processed data
-5. Frontend queries data through API routes
+1. **Install dependencies**:
+
+   - Clone the frontend repository and run `yarn install`.
+
+2. **Set up environment variables**:
+
+   - Create a `.env.local` file:
+     ```env
+     NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
+     NEXT_PUBLIC_CONTRACT_ADDRESS=contract_address_here
+     NEXT_PUBLIC_GRAPHQL_URL=subgraph_endpoint_here
+     NEXT_PUBLIC_CHAIN_ID=167009
+     ```
+
+3. **Database setup**:
+
+   - Use Neon PostgreSQL and configure the `DATABASE_URL` in `.env.local`.
+
+4. **Prisma setup**:
+
+   - Generate the Prisma client with `npx prisma generate`.
+   - Push the Prisma schema with `npx prisma db push`.
+
+5. **Run the application**:
+   - Start the development server with `yarn dev`.
+
+---
+
+## Indexed Events
+
+The platform tracks the following events for indexing and analytics:
+
+- `CauseCreated`
+- `DonationReceived`
+- `MilestoneAdded`
+- `MilestoneCompleted`
+- `BadgeEarned`
+- `FundsWithdrawn`
+- `CauseTargetReached`
+- `ImpactScoreUpdated`
+
+---
 
 ## API Routes
 
-- /api/causes - Get all causes
-- /api/causes/[id] - Get specific cause details
-- /api/users/[address] - Get user profile and donations
-- /api/search-causes - Search causes
-- /api/causes/[id]/feature - Toggle cause featured status
+- **`/api/causes`**: Get all causes.
+- **`/api/causes/[id]`**: Get specific cause details.
+- **`/api/users/[address]`**: Get user profile and donation history.
+- **`/api/search-causes`**: Search for causes.
+- **`/api/causes/[id]/feature`**: Toggle featured status for a cause.
 
-## Contributing
+---
 
-1. Fork the repository
-2. Create your feature branch (git checkout -b feature/amazing-feature)
-3. Commit your changes (git commit -m 'Add some amazing feature')
-4. Push to the branch (git push origin feature/amazing-feature)
-5. Open a Pull Request
+## Acknowledgments
+
+- **Taiko Labs:** For the Taiko testnet infrastructure.
+- **Goldsky:** For subgraph indexing solutions.
+
+---
 
 ## License
 
 MIT
-
-## Acknowledgments
-
-Built during The Grant Factory Hackathon by Taiko Labs. Special thanks to:
-
-- Taiko Labs for the testnet infrastructure
-- Goldsky for their subgraph indexing solution
